@@ -1,11 +1,10 @@
-SELECT b.pdbid as "PDB code", r.ls_d_res_high as "Resolution", b.deposition_date as "Deposition date", r."ls_R_factor_R_work" as "R", r."ls_R_factor_R_free" as "R free", g.all_atom_clashscore as "Clashscore", g.rotamer_outliers_percent as "Rotamer outliers [%]", g."Ramachandran_outlier_percent" as  "Ramachandran outliers [%]", m."RSRZ_outliers_percent" as "RSRZ outliers [%]", r2.pdbx_number_atoms_protein as "Protein residues", r2.pdbx_number_atoms_nucleic_acid "Nucleic acids residues", b.citation_journal_pri "Journal", c."journal_id_ISSN" as "ISSN", c."journal_id_CSD" as "Journal CSD Id", c.year as "Publication year"
+SELECT b.pdbid as "PDB code", r.ls_d_res_high as "Resolution", b.deposition_date as "Deposition date", r."ls_R_factor_R_work" as "R", r."ls_R_factor_R_free" as "R free", g.clashscore as "Clashscore", g.percent_rotamer_outliers as "Rotamer outliers [%]", g.percent_ramachandran_outliers as  "Ramachandran outliers [%]", m."percent_RSRZ_outliers" as "RSRZ outliers [%]", r2.pdbx_number_atoms_protein as "Protein residues", r2.pdbx_number_atoms_nucleic_acid "Nucleic acids residues", b.citation_journal_pri "Journal", c."journal_id_ISSN" as "ISSN", c."journal_id_CSD" as "Journal CSD Id", c.year as "Publication year"
 FROM brief_summary b
    left outer join refine r on r.pdbid = b.pdbid
    left outer join refine_hist r2 on r2.pdbid = b.pdbid
    left outer join citation c on (c.pdbid = b.pdbid and c.id = 'primary')
-   left outer join vrpt.pdbx_dcc_geometry g on g.pdbid = b.pdbid
-   left outer join vrpt.pdbx_dcc_density d on d.pdbid = b.pdbid
-   left outer join vrpt.pdbx_dcc_map_overall m on m.pdbid = b.pdbid
+   left outer join vrpt.pdbx_vrpt_summary_geometry g on g.pdbid = b.pdbid
+   left outer join vrpt.pdbx_vrpt_summary_diffraction m on m.pdbid = b.pdbid
 WHERE r.ls_d_res_high is not null 
    AND r.pdbx_refine_id = 'X-RAY DIFFRACTION'
 ORDER BY b.deposition_date 
